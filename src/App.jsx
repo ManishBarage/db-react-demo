@@ -9,7 +9,6 @@ function App() {
     <>
       <NavBar></NavBar>
       <AppRoutes></AppRoutes>
-      <hr />
     </>
   );
 }

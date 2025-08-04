@@ -22,7 +22,7 @@ const EmployeeList = () => {
   return (
     <>
       <p>Employee List</p>
-      {empList.map((emp, index) => (
+      {empList && empList.map((emp, index) => (
         <div key={index}>
           <p>Name : {emp.name} <Link to={`/employees/${emp.id}`}> View Details</Link></p>
           {/* <p> Salary : {emp.salary}</p> */}
