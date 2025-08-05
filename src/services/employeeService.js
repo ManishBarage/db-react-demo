@@ -8,6 +8,7 @@ const api = axios.create({
   }
 });
 
+// Get all employees
 const getAllEmployees = async () => {
   try {
     const response = await api.get("/");
@@ -18,6 +19,7 @@ const getAllEmployees = async () => {
   }
 };
 
+// Get a specific employee by ID
 const getEmployeeById = async (id) => {
   try {
     const response = await api.get(`/${id}`);
@@ -28,6 +30,7 @@ const getEmployeeById = async (id) => {
   }
 };
 
+// Add a new employee
 const addEmployee = async (employee) => {
   try {
     const response = await api.post("/", employee);
@@ -38,4 +41,20 @@ const addEmployee = async (employee) => {
   }
 };
 
-export { getAllEmployees, getEmployeeById, addEmployee };
+// Delete employee by ID
+const deleteEmployeeById = async (id) => {
+  try {
+    const response = await api.delete(`/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error deleting employee with id ${id}:`, error);
+    throw error;
+  }
+};
+
+export {
+  getAllEmployees,
+  getEmployeeById,
+  addEmployee,
+  deleteEmployeeById
+};

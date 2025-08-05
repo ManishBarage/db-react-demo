@@ -1,43 +1,90 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { addEmployee } from "../../services/employeeService";
 
 const AddEmployee = () => {
-  const [employee, setEmployee] = useState({ name: "", salary: "" });
-  const [submittedData, setSubmittedData] = useState({ name: "", salary: "" });
+  const [name, setName] = useState("");
+  const [salary, setSalary] = useState("");
+  const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleInput = (evt) => {
-    console.log(evt.target);
-    setEmployee({ ...employee, [evt.target.name]: evt.target.value});
-  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
-    // console.log(evt.target);
-    setSubmittedData(employee);
+    if (!name || !salary || parseFloat(salary) <= 0) {
+      setMessage("Please provide a valid name and salary.");
+      return;
+    }
+
+    const employee = {
+      name,
+      salary: parseFloat(salary),
+    };
+
+    try {
+      setIsSubmitting(true);
+      await addEmployee(employee);
+      setMessage("Employee added successfully!");
+      setName("");
+      setSalary("");
+    } catch (error) {
+      const backendMessage = error.response?.headers?.message;
+      setMessage((backendMessage || "Internal server error"));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <>
-      <p>Add Employee</p>
-      <p>Data after submitted</p>
-      <p>Name : {submittedData.name}</p>
-      <p>Salary : {submittedData.salary}</p>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          value={employee.name}
-          onChange={handleInput}
-          autoFocus
-        />
-        <input
-          type="number"
-          name="salary"
-          value={employee.salary}
-          onChange={handleInput}
-        />
-        <input type="submit" value="Submit" />
-      </form>
-    </>
+    <div className="container mt-5" style={{ maxWidth: "500px" }}>
+      <div className="card shadow">
+        <div className="card-body">
+          <h3 className="card-title text-center mb-4 text-primary">
+            Add New Employee
+          </h3>
+
+          {message && (
+            <div className="alert alert-info text-center" role="alert">
+              {message}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <label className="form-label">Name</label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Enter employee name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label">Salary</label>
+              <input
+                type="number"
+                className="form-control"
+                placeholder="Enter salary"
+                value={salary}
+                onChange={(e) => setSalary(e.target.value)}
+                required
+                min="1"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="btn btn-primary w-100"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Adding..." : "Add Employee"}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
   );
 };
 

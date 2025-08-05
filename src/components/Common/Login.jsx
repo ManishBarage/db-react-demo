@@ -6,7 +6,7 @@ const Login = () => {
     useContext(UserContext);
   const [empData, setEmployee] = useState({ userName: "", password: "" });
   const [message, setMessage] = useState("");
-  const [msgType, setMsgType] = useState(""); // "success" or "danger"
+  const [msgType, setMsgType] = useState("");
 
   const handleInput = (evt) => {
     setEmployee({ ...empData, [evt.target.name]: evt.target.value });
